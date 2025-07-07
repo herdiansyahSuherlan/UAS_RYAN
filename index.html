@@ -22,12 +22,11 @@
   </style>
 </head>
 <body>
-  <h2>Grafik Nilai Potensiometer (20 Data Terbaru)</h2>
+  <h2>Grafik Nilai Potensiometer</h2>
   <canvas id="potChart" width="600" height="300"></canvas>
 
   <script>
-    // Ambil hanya 20 data terakhir
-    const firebaseURL = "https://uasswnnofal-default-rtdb.asia-southeast1.firebasedatabase.app/POTENSIO/history.json?orderBy=\"$key\"&limitToLast=20";
+    const firebaseURL = "https://uasswnnofal-default-rtdb.asia-southeast1.firebasedatabase.app/POTENSIO/history.json";
 
     const ctx = document.getElementById('potChart').getContext('2d');
     const chart = new Chart(ctx, {
@@ -37,8 +36,8 @@
         datasets: [{
           label: 'Nilai Potensio',
           data: [],
-          borderColor: 'rgba(0, 200, 0, 1)',
-          backgroundColor: 'rgba(0, 200, 0, 0.2)',
+          borderColor: 'rgba(255, 0, 0, 1)',
+          backgroundColor: 'rgba(255, 0, 0, 0.2)',
           borderWidth: 2,
           tension: 0.4,
           pointRadius: 2,
@@ -74,9 +73,6 @@
                 enabled: false
               },
               mode: 'x',
-            },
-            limits: {
-              x: { minRange: 5 }
             }
           }
         }
@@ -92,9 +88,16 @@
           const keys = Object.keys(data);
           const values = keys.map(key => data[key]);
 
-          const labels = keys.map((_, i) => `Data ${i + 1}`);
-          chart.data.labels = labels;
+          const visibleCount = 20;
+          const total = keys.length;
+          const start = total > visibleCount ? total - visibleCount : 0;
+
+          chart.data.labels = keys.map((_, i) => `Data ${i + 1}`);
           chart.data.datasets[0].data = values;
+
+          // Set tampilan awal ke 20 data terbaru
+          chart.options.scales.x.min = start;
+          chart.options.scales.x.max = total - 1;
 
           chart.update();
         }

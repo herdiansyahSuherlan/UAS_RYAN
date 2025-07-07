@@ -22,11 +22,12 @@
   </style>
 </head>
 <body>
-  <h2>Grafik Nilai Potensiometer</h2>
+  <h2>Grafik Nilai Potensiometer (20 Data Terbaru)</h2>
   <canvas id="potChart" width="600" height="300"></canvas>
 
   <script>
-    const firebaseURL = "https://uasswnnofal-default-rtdb.asia-southeast1.firebasedatabase.app/POTENSIO/history.json";
+    // Ambil hanya 20 data terakhir
+    const firebaseURL = "https://uasswnnofal-default-rtdb.asia-southeast1.firebasedatabase.app/POTENSIO/history.json?orderBy=\"$key\"&limitToLast=20";
 
     const ctx = document.getElementById('potChart').getContext('2d');
     const chart = new Chart(ctx, {
@@ -94,16 +95,6 @@
           const labels = keys.map((_, i) => `Data ${i + 1}`);
           chart.data.labels = labels;
           chart.data.datasets[0].data = values;
-
-          const visibleCount = 20;
-          const total = labels.length;
-
-          const startIndex = total > visibleCount ? total - visibleCount : 0;
-          const minLabel = labels[startIndex];
-          const maxLabel = labels[labels.length - 1];
-
-          chart.options.scales.x.min = minLabel;
-          chart.options.scales.x.max = maxLabel;
 
           chart.update();
         }
